@@ -39,13 +39,13 @@ cd /mnt/gentoo;
 
 # Download tarball and signature
 echo "Downloading Gentoo stage3 tarball";
-sudo wget --progress=bar:force $ROOT$FILEPATH # 2>&1 | progressfilt;
+sudo wget --progress=bar:force $ROOT$FILEPATH 2>&1 | progressfilt;
 echo "Downloading signature";
-sudo wget --progress=bar:force $ROOT$FILEPATH.DIGESTS.asc # 2>&1 | progressfilt;
-gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0xBB572E0E2D182910;
+sudo wget --progress=bar:force $ROOT$FILEPATH.DIGESTS.asc 2>&1 | progressfilt;
+gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0xBB572E0E2D182910 &>/dev/null;
 # Parsing the output of sha512sum manually because it contains errors due 
 # to Whirlpool hashes that are not supported by sha512sum
-grep -A1 -m1 "SHA512" $DIGESTS | sha512sum -c - && gpg --verify $DIGESTS
+grep -A1 -m1 "SHA512" $DIGESTS | sha512sum -c - && gpg --verify $DIGESTS &>/dev/null;
 if [[ $? -eq 0 ]]
 then
 	echo "Signature verified!";
