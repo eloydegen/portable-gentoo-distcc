@@ -43,10 +43,10 @@ sudo wget --progress=bar:force $ROOT$FILEPATH # 2>&1 | progressfilt;
 echo "Downloading signature";
 sudo wget --progress=bar:force $ROOT$FILEPATH.DIGESTS.asc # 2>&1 | progressfilt;
 gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 0xBB572E0E2D182910;
-
 # Parsing the output of sha512sum manually because it contains errors due 
 # to Whirlpool hashes that are not supported by sha512sum
-if [ "$(sha512sum -c $DIGESTS --ignore-missing | awk 'NR==1{print $2; exit}')" == "OK" ]
+grep -A1 -m1 "SHA512" $DIGESTS | sha512sum -c - && gpg --verify $DIGESTS
+if [[ $? -eq 0 ]]
 then
 	echo "Signature verified!";
 else
