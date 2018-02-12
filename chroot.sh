@@ -23,5 +23,19 @@ rc_depend_strict="NO"
 rc_need="!net !dev !udev-mount !sysfs !checkfs !fsck !netmount !logger !clock !modules"
 EOT
 
+
+# Custom configuration for project
+cat <<EOT > /etc/conf.d/distccd
+DISTCCD_EXEC="/usr/bin/distccd"
+DISTCCD_PIDFILE="/var/run/distccd/distccd.pid"
+DISTCCD_OPTS="${DISTCCD_OPTS} --port 3632"
+DISTCCD_OPTS="${DISTCCD_OPTS} --log-level notice --log-file /var/log/distccd/distccd.log"
+DISTCCD_OPTS="${DISTCCD_OPTS} --allow 0.0.0.0/0"
+DISTCCD_OPTS="${DISTCCD_OPTS} -N 0"
+EOT
+
+sudo mkdir -p /var/log/distccd/distccd.log
+sudo chown -R distcc:daemon /var/log/distccd
+
 # Start the DistCC daemon
 rc-service distccd start
